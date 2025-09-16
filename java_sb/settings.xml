@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<settings xmlns="http://maven.apache.org/SETTINGS/1.2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.2.0 http://maven.apache.org/xsd/settings-1.2.0.xsd">
+
+  <!-- Répertoire local du repository Maven -->
+  <localRepository>.m2/repository</localRepository>
+
+  <!-- Mode interactif (par défaut : true) -->
+  <interactiveMode>true</interactiveMode>
+
+  <!-- Mode hors ligne (par défaut : false) -->
+  <offline>false</offline>
+
+  <!-- Configuration des proxies (si nécessaire) -->
+  <proxies>
+    <!-- Exemple de configuration proxy (commenté par défaut)
+    <proxy>
+      <id>example-proxy</id>
+      <active>false</active>
+      <protocol>http</protocol>
+      <host>proxy.example.com</host>
+      <port>8080</port>
+      <username>proxyuser</username>
+      <password>proxypass</password>
+      <nonProxyHosts>localhost|127.*|[::1]</nonProxyHosts>
+    </proxy>
+    -->
+  </proxies>
+
+  <!-- Serveurs pour l'authentification -->
+  <servers>
+    <!-- Exemple de configuration serveur (commenté par défaut)
+    <server>
+      <id>central</id>
+      <username>maven-user</username>
+      <password>maven-password</password>
+    </server>
+    -->
+  </servers>
+
+  <!-- Miroirs des repositories -->
+  <mirrors>
+    <!-- Exemple de miroir Maven Central (commenté par défaut)
+    <mirror>
+      <id>central-mirror</id>
+      <name>Maven Central Mirror</name>
+      <url>https://repo1.maven.org/maven2</url>
+      <mirrorOf>central</mirrorOf>
+    </mirror>
+    -->
+  </mirrors>
+
+  <!-- Profils Maven -->
+  <profiles>
+    <!-- Profil par défaut avec repositories standard -->
+    <profile>
+      <id>default</id>
+      <repositories>
+        <repository>
+          <id>central</id>
+          <name>Maven Central Repository</name>
+          <url>https://repo1.maven.org/maven2</url>
+          <layout>default</layout>
+          <snapshots>
+            <enabled>false</enabled>
+          </snapshots>
+        </repository>
+      </repositories>
+      <pluginRepositories>
+        <pluginRepository>
+          <id>central</id>
+          <name>Maven Plugin Repository</name>
+          <url>https://repo1.maven.org/maven2</url>
+          <layout>default</layout>
+          <snapshots>
+            <enabled>false</enabled>
+          </snapshots>
+          <releases>
+            <updatePolicy>never</updatePolicy>
+          </releases>
+        </pluginRepository>
+      </pluginRepositories>
+      <properties>
+        <maven.repo.local>.m2/repository</maven.repo.local>
+        <maven.artifact.threads>1</maven.artifact.threads>
+        <maven.wagon.http.retryHandler.count>3</maven.wagon.http.retryHandler.count>
+        <maven.wagon.httpconnectionManager.ttlSeconds>120</maven.wagon.httpconnectionManager.ttlSeconds>
+      </properties>
+    </profile>
+
+    <!-- Profil pour le développement local -->
+    <profile>
+      <id>dev</id>
+      <properties>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <maven.test.skip>false</maven.test.skip>
+      </properties>
+    </profile>
+
+    <!-- Profil pour les tests -->
+    <profile>
+      <id>test</id>
+      <properties>
+        <maven.test.failure.ignore>false</maven.test.failure.ignore>
+        <maven.test.skip>false</maven.test.skip>
+        <skipTests>false</skipTests>
+      </properties>
+    </profile>
+
+    <!-- Profil pour la production -->
+    <profile>
+      <id>prod</id>
+      <properties>
+        <maven.test.skip>true</maven.test.skip>
+        <skipTests>true</skipTests>
+      </properties>
+    </profile>
+  </profiles>
+
+  <!-- Profils actifs par défaut -->
+  <activeProfiles>
+    <activeProfile>default</activeProfile>
+    <activeProfile>dev</activeProfile>
+  </activeProfiles>
+
+</settings>

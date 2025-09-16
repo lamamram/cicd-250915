@@ -1,0 +1,12 @@
+variables:
+  JAVA_VERSION: 3.9.9-eclipse-temurin-21-alpine
+
+image: maven:${JAVA_VERSION}
+test:
+  tags:
+    - formation
+  before_script:
+    # - cd java_sb
+    - cp java-cicd/amounts.csv ${HOME}/amounts.csv
+  script:
+    - mvn test

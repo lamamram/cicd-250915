@@ -1,0 +1,5 @@
+tomcat
+------
+pom.xml: packaging war + dependency tomcat + finalName => no underscore
+applicationclass extends SpringBootServletInitializer
+then delete the other main class ServletInitializer.java

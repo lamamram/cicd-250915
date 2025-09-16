@@ -1,0 +1,30 @@
+# dans le projet ops
+stages:
+  - loading
+  - staging
+
+load:
+  stage: loading
+  image: curlimages/curl:latest
+  tags:
+    - formation
+  script:
+    # le id 3 correspond à l'id du projet java_sb ici
+    - >
+      curl 
+      -k 
+      --location 
+      -o ./java-sb.tar.gz
+      --header "JOB-TOKEN: $CI_JOB_TOKEN" 
+      "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/java_sb/staging-rc/java-sb.war"
+  artifacts:
+    expire_in: "2 minutes"
+    paths:
+      - ./java-sb.tar.gz
+
+staging:
+  stage: staging
+  tags:
+    - formation
+  script:
+    - echo "deploy"

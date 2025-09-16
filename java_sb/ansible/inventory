@@ -1,0 +1,12 @@
+# Ansible Inventory File
+
+# Define the staging server
+staging ansible_host=172.17.0.1
+
+# Define the dev group that contains the staging server
+[dev]
+staging
+
+# Variables for the dev group
+[dev:vars]
+env_user=ansible

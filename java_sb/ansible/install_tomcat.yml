@@ -1,0 +1,51 @@
+---
+# Ansible Playbook to install tomcat on Debian 12
+- name: Install tomcat on Debian 12
+  hosts: dev
+  remote_user: "{{ env_user }}"
+  become: yes  # Use sudo privileges
+  vars:
+    tomcat_img: "tomcat:11-jdk21"
+    exposed_port: 8081
+    xms: 512m
+    xmx: 1024m
+    app: "java-sb"
+
+  tasks:
+    - name: ckeck if docker is installed
+      shell: 
+        docker --version
+    
+    - name: check docker is a service
+      systemd:
+        name: docker
+        state: started
+    
+    - name: docker pull tomcat image
+      shell:
+        docker pull {{ tomcat_img }}
+      register: docker_pull_result
+    
+    - name: transfer war file to remote server
+      copy:
+        src: "{{ playbook_dir }}/../target/{{ app }}.war.original"
+        dest: "/home/{{ ansible_user }}/{{ app }}.war"
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+        mode: '0644'
+  
+    - name: delete current tomcat container if exists
+      shell: |
+        [[ -z $(docker ps -q --filter name=tomcat) ]] || docker rm -f tomcat
+    
+    - name: run tomcat container with war file as bind mount
+      shell: |
+        docker run -d \
+        --name tomcat \
+        --restart unless-stopped \
+        -p {{ exposed_port }}:8080 \
+        -v /home/{{ ansible_user }}/{{ app }}.war:/usr/local/tomcat/webapps/{{ app }}.war \
+        -e JAVA_OPTS="-Xms{{ xms }} -Xmx{{ xmx }}" \
+        {{ tomcat_img }}
+      when: docker_pull_result.rc == 0
+

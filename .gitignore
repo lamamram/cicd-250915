@@ -1,15 +1,44 @@
-## tout dossier .vagrant depuis la racine de la copie
+gitlab.lan.fr.crt
+test.ps1
+test.py
+issues/
+gitlab_workflow.json
 .vagrant/
-## le dossier .vagrant à la racine //
-# /.vagrant/
-infos.txt
-debug.log
-## exception à une règle précédente SAUF règle de type "dossier"
-# !target/debug.log
-# !.vagrant/debug.log
-[sS]amples/
-reports/
+# geckodriver*
+##
+HELP.md
+target/
+.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
 
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
 
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
 
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
 
+### VS Code ###
+.vscode/
+
+**/steps/**/.gitlab-ci.yml
+**/.m2/
