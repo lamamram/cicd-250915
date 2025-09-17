@@ -8,4 +8,6 @@ test:
   tags:
     - formation
   script:
+    # positionner le shell dans le conteneur, dans le dossier contenant le pom.xml
+    - cd java_sb
     - mvn test
