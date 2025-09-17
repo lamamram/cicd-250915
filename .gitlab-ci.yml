@@ -1,4 +1,10 @@
 test:
+  # demander une image adéquat au job depuis le docker hub
+  # choix d'une image: environnement
+  # - contenant les outils maven avec les bonnes versions (3.9.x) rt jdk 21
+  # - minimum de vulnérabilités
+  # - léger
+  image: maven:3.9.11-eclipse-temurin-21
   tags:
     - formation
   script:
