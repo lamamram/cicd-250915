@@ -1,7 +1,6 @@
 variables:
   MAVEN_VERSION: 3.9.11-eclipse-temurin-21
-  # MAVEN_OPTS: change le comportement de maven avec des options -Dmaven.????
-  MAVEN_OPTS: -Dmaven.repo.local=.m2/repository
+  MAVEN_OPTS: -Dmaven.repo.local=$CI_PROJECT_DIR/.m2/repository
 
 image: maven:${MAVEN_VERSION}
 
@@ -25,16 +24,10 @@ build:
     - cd java_sb
   script:
     - mvn compile
-    - ls -al
-    - ls -al ..
   cache:
-    # clé dynamique: ex: $CI_COMMIT_BRANCH-deps (liée à la branche poussée)
     key: deps
-    # on ne télécharge pas le cache, on le génère
     policy: push
     paths:
-      # WARN: gitlab ne peut pas récolter un chemin en dehors du dossier projet dans le conteneur
-      # - ~/.m2
       - .m2/repository
 
 test:
@@ -45,3 +38,12 @@ test:
     - cd java_sb
   script:
     - mvn test
+  cache:
+    key: deps
+    # utilisation pure du cache mais on ne met pas à jour le cache
+    policy: pull
+    # untracked => nouveau fichier dans un dépôt git jamais commité
+    # en gitlab => par défaut gitlab nettoie le dépôt après son installation (git clean) qui dégagent les fichier untracked
+    # => le cache qui nécessairement untracked DEGAGE !!!
+    # untracked true => permet de conserver le cache
+    untracked: true
