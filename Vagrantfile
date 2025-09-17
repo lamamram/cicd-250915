@@ -27,8 +27,8 @@ Vagrant.configure(2) do |config|
   # Windows: Get-NetAdapter | Where-Object {$_.Status -eq "Up"} | Select-Object -ExpandProperty InterfaceDescription
   # ip disponible pour la VM dans l'interface ci-dessus: ping | nslookup
   # CIDR: masque de sous réseau 24 <==> 255.255.255
-  interface = "Intel(R) Ethernet Connection (7) I219-LM #2"
-  ip        = "192.168.1.140"
+  interface = "Intel(R) Wireless-AC 9260 160MHz"
+  ip        = "10.154.255.177"
   cidr      = "24"
 
   ## MAIN
