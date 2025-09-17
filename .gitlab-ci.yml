@@ -1,13 +1,16 @@
+# créer ou modifier des variables d'environnement
+# "variables:" en dehors des jobs => variables globales injectées dans tous les jobs
+# "variables:" dans un job => variable locale injectée dans le job
+variables:
+  MAVEN_VERSION: 3.9.11-eclipse-temurin-21
+
 test:
-  # demander une image adéquat au job depuis le docker hub
-  # choix d'une image: environnement
-  # - contenant les outils maven avec les bonnes versions (3.9.x) rt jdk 21
-  # - minimum de vulnérabilités
-  # - léger
-  image: maven:3.9.11-eclipse-temurin-21
+  image: maven:${MAVEN_VERSION}
   tags:
     - formation
-  script:
-    # positionner le shell dans le conteneur, dans le dossier contenant le pom.xml
+  # commandes de préparation
+  before_script:
     - cd java_sb
+  # commandes effective du job
+  script:
     - mvn test
