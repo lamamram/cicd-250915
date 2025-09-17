@@ -1,5 +1,7 @@
 variables:
   MAVEN_VERSION: 3.9.11-eclipse-temurin-21
+  # MAVEN_OPTS: change le comportement de maven avec des options -Dmaven.????
+  MAVEN_OPTS: -Dmaven.repo.local=.m2/repository
 
 image: maven:${MAVEN_VERSION}
 
@@ -10,8 +12,6 @@ image: maven:${MAVEN_VERSION}
 # 3. si le cache est valide (si les denpendances n'ont pas changé) => je n'exécute pas le job initial
 # 3b: si le cache est supprimé en dehors du CI/CD => je me donne une procédure manuelle pour exécuter le job initial
 
-# stages: étapes principales du pipeline dans l'ordre
-# REM: jobs sans stage ou plusieurs job dans le même stage d'exécutent en //
 stages:
   - building
   - testing
@@ -25,6 +25,17 @@ build:
     - cd java_sb
   script:
     - mvn compile
+    - ls -al
+    - ls -al ..
+  cache:
+    # clé dynamique: ex: $CI_COMMIT_BRANCH-deps (liée à la branche poussée)
+    key: deps
+    # on ne télécharge pas le cache, on le génère
+    policy: push
+    paths:
+      # WARN: gitlab ne peut pas récolter un chemin en dehors du dossier projet dans le conteneur
+      # - ~/.m2
+      - .m2/repository
 
 test:
   stage: testing
