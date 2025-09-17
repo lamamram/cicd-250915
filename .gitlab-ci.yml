@@ -1,6 +1,12 @@
 variables:
   MAVEN_VERSION: 3.9.11-eclipse-temurin-21
   MAVEN_OPTS: -Dmaven.repo.local=$CI_PROJECT_DIR/.m2/repository
+  MAVEN_ARGS: >
+              -s settings.xml
+              -Pdefault
+              -Dorg.slf4j.simpleLogger.defaultLogLevel=error
+  GET_OFFLINE: "-o"
+  TRIGGER_CACHE: "on"
 
 image: maven:${MAVEN_VERSION}
 
@@ -23,12 +29,22 @@ build:
   before_script:
     - cd java_sb
   script:
-    - mvn compile
+    # il faut exécuter test pour forcer le téléchargement des plugins de test
+    - mvn test
   cache:
     key: deps
     policy: push
     paths:
       - .m2/repository
+  # règles d'exécution du job
+  # chaque règle VRAIE rend le job exécuté => OU logique
+  rules:
+    # si toutes les clauses (ici changes et when) sont vraies alors la règle est Vraie => ET logique
+    - changes:
+        - java_sb/pom.xml
+      # s'exécute le job précédent en succès (vraie par défaut)
+      # when: on_success
+    - if: $TRIGGER_CACHE == "on"
 
 test:
   stage: testing
@@ -37,13 +53,9 @@ test:
   before_script:
     - cd java_sb
   script:
-    - mvn test
+    - mvn test $GET_OFFLINE
+    # - mvn test
   cache:
     key: deps
-    # utilisation pure du cache mais on ne met pas à jour le cache
     policy: pull
-    # untracked => nouveau fichier dans un dépôt git jamais commité
-    # en gitlab => par défaut gitlab nettoie le dépôt après son installation (git clean) qui dégagent les fichier untracked
-    # => le cache qui nécessairement untracked DEGAGE !!!
-    # untracked true => permet de conserver le cache
     untracked: true
