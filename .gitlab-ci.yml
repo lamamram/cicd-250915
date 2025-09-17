@@ -1,17 +1,5 @@
-# {
-#   "test": {
-#     "tags": ["formation"],
-#     "script": [
-#       "echo 'TESTS !'"
-#     ]
-#   }
-# }
-## 1ER job "hello world"
-# nom du job: valeur arbitraire
 test:
-  # association entre le job "test" et le runner lié au projet dev
   tags:
     - formation
-  # liste des commandes shell qui est exécutée dans un conteneur Docker 
   script:
-    - echo 'TESTS !'
+    - mvn test
