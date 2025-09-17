@@ -1,7 +1,6 @@
 variables:
   MAVEN_VERSION: 3.9.11-eclipse-temurin-21
 
-# l'image par défaut du pipeline
 image: maven:${MAVEN_VERSION}
 
 ## gestion de dépendances
@@ -11,8 +10,15 @@ image: maven:${MAVEN_VERSION}
 # 3. si le cache est valide (si les denpendances n'ont pas changé) => je n'exécute pas le job initial
 # 3b: si le cache est supprimé en dehors du CI/CD => je me donne une procédure manuelle pour exécuter le job initial
 
+# stages: étapes principales du pipeline dans l'ordre
+# REM: jobs sans stage ou plusieurs job dans le même stage d'exécutent en //
+stages:
+  - building
+  - testing
+
 
 build:
+  stage: building
   tags:
     - formation
   before_script:
@@ -21,6 +27,7 @@ build:
     - mvn compile
 
 test:
+  stage: testing
   tags:
     - formation
   before_script:
