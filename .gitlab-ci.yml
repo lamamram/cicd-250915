@@ -1,16 +1,29 @@
-# créer ou modifier des variables d'environnement
-# "variables:" en dehors des jobs => variables globales injectées dans tous les jobs
-# "variables:" dans un job => variable locale injectée dans le job
 variables:
   MAVEN_VERSION: 3.9.11-eclipse-temurin-21
 
-test:
-  image: maven:${MAVEN_VERSION}
+# l'image par défaut du pipeline
+image: maven:${MAVEN_VERSION}
+
+## gestion de dépendances
+# 1. déporter l'installation des dépendances dans un job inital
+# 2. créer un cache dans gitlab à partir du dossier contenant les dépendances
+# 2b. réutiliser le cache pour le job test et tous les jobs suivants utilisant maven
+# 3. si le cache est valide (si les denpendances n'ont pas changé) => je n'exécute pas le job initial
+# 3b: si le cache est supprimé en dehors du CI/CD => je me donne une procédure manuelle pour exécuter le job initial
+
+
+build:
   tags:
     - formation
-  # commandes de préparation
   before_script:
     - cd java_sb
-  # commandes effective du job
+  script:
+    - mvn compile
+
+test:
+  tags:
+    - formation
+  before_script:
+    - cd java_sb
   script:
     - mvn test
