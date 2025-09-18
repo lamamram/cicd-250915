@@ -1,0 +1,6 @@
+#!/bin/sh
+#
+cd java_sb
+mvn formatter:format --quiet
+# rajouter les formatage dans l'index  !!!
+git add .
