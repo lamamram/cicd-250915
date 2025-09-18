@@ -47,6 +47,20 @@ test:
   script:
     - mvn test $GET_OFFLINE
     # - mvn test
+        # afficher le résultat de la couverture TOTALE dans la console du job
+    - cat target/site/jacoco/index.html
+  # capturer la ligne de console qui contient la couverture TOTALE
+  coverage: /Total</td><td class="bar">[0-9]{1,3} of [0-9]{1,3}</td><td class="ctr2">([0-9]{1,3})/
+  artifacts:
+    access: developer
+    expire_in: "1 hour"
+    paths:
+      - java_sb/target/site/jacoco/jacoco.xml
+    reports:
+      junit: java_sb/target/surefire-reports/TEST-*.xml
+      coverage_report:
+        coverage_format: jacoco
+        path: java_sb/target/site/jacoco/jacoco.xml
   cache:
     key: deps
     policy: pull
