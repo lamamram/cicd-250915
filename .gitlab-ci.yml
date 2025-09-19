@@ -17,10 +17,10 @@ variables:
               -s settings.xml
               -Pdefault
               -Dorg.slf4j.simpleLogger.defaultLogLevel=error
-  GET_OFFLINE: ""
+  GET_OFFLINE: "-o"
   TRIGGER_CACHE: "off"
   PACKAGE_CACHE_POLICY: pull
-  SELENIUM_CACHE_POLICY: pull-push
+  SELENIUM_CACHE_POLICY: pull
 
 # image: gitlab.lan.fr:5050/formation/dev/java-cicd:${MAVEN_VERSION}
 image: $CI_REGISTRY_IMAGE/java-cicd:${MAVEN_VERSION}
