@@ -20,7 +20,7 @@ variables:
   GET_OFFLINE: "-o"
   TRIGGER_CACHE: "off"
 
-image: gitlab.lan.fr:5050/formation/dev/java-cid:${MAVEN_VERSION}
+image: gitlab.lan.fr:5050/formation/dev/java-cicd:${MAVEN_VERSION}
 
 before_script:
   - cd java_sb
