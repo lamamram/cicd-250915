@@ -35,7 +35,7 @@ build:
         - java_sb/pom.xml
     - if: $TRIGGER_CACHE == "on"
 
-test:
+.test:
   stage: testing
   tags:
     - formation
@@ -61,7 +61,7 @@ test:
     untracked: true
 
 
-sonar:
+.sonar:
   stage: qualifying
   tags:
     - formation
