@@ -20,7 +20,7 @@ variables:
   GET_OFFLINE: "-o"
   TRIGGER_CACHE: "off"
 
-image: maven:${MAVEN_VERSION}
+image: gitlab.lan.fr:5050/formation/dev/java-cid:${MAVEN_VERSION}
 
 before_script:
   - cd java_sb
@@ -122,13 +122,13 @@ e2e:
   services:
     - name: selenium/standalone-firefox
       alias: selenium-server
-  before_script:
-    - >
-      tar 
-      -xzf geckodriver-${GECKODRIVER_VERSION}.tar.gz
-      -C /usr/local/bin
-    - chmod u+x /usr/local/bin/geckodriver
-    - cd java_sb
+  # before_script:
+  #   - >
+  #     tar 
+  #     -xzf geckodriver-${GECKODRIVER_VERSION}.tar.gz
+  #     -C /usr/local/bin
+  #   - chmod u+x /usr/local/bin/geckodriver
+  #   - cd java_sb
   script:
     - mvn test -Dtest=CucumberTest
   artifacts:
