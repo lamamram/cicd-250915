@@ -92,16 +92,19 @@ staging:
   before_script:
     - cd java_sb
   script:
-    # création de l'app .war
     - mvn package -Dmaven.test.skip=true
-    - echo "Deploy !"
-  # config pour gérer le déploiement dans Operate > Environments
+    # utilisation du registre de paquet "générique" dans gitlab: Deploy > Package Registry
+    - ls -al
+    - >
+      curl
+      -k --header "JOB-TOKEN: $CI_JOB_TOKEN"
+      --upload-file target/java-sb.war
+      "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/java_sb/staging-rc/java-sb.war"
   environment:
     name: staging
     url: https://dawan.fr
   rules:
     - if: $CI_COMMIT_TAG =~ /v\d+\.\d+$/
-    # pour la démo
     - if: $CI_COMMIT_BRANCH == "main"
     
   
