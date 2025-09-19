@@ -100,7 +100,7 @@ staging:
   tags:
     - formation
   script:
-    - mvn package -Dmaven.test.skip=true
+    - mvn package -Dmaven.test.skip=true $GET_OFFLINE
     # utilisation du registre de paquet "générique" dans gitlab: Deploy > Package Registry
     - >
       curl
@@ -117,7 +117,7 @@ staging:
   cache: 
     # ANCHOR YAML: alias + modification / ajout de clé
     <<: *cache
-    policy: pull-push
+    # policy: pull-push
 
 
 
