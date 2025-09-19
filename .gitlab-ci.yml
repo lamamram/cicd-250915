@@ -17,8 +17,10 @@ variables:
               -s settings.xml
               -Pdefault
               -Dorg.slf4j.simpleLogger.defaultLogLevel=error
-  GET_OFFLINE: "-o"
+  GET_OFFLINE: ""
   TRIGGER_CACHE: "off"
+  PACKAGE_CACHE_POLICY: pull
+  SELENIUM_CACHE_POLICY: pull-push
 
 # image: gitlab.lan.fr:5050/formation/dev/java-cicd:${MAVEN_VERSION}
 image: $CI_REGISTRY_IMAGE/java-cicd:${MAVEN_VERSION}
@@ -95,7 +97,7 @@ build:
 
 ######## deploy #############################
 
-staging:
+.staging:
   stage: staging
   tags:
     - formation
@@ -117,11 +119,10 @@ staging:
   cache: 
     # ANCHOR YAML: alias + modification / ajout de clé
     <<: *cache
-    # policy: pull-push
+    policy: $PACKAGE_CACHE_POLICY
 
 
-
-.e2e:
+e2e:
   stage: browsing
   tags:
     - formation
@@ -136,7 +137,7 @@ staging:
   #   - chmod u+x /usr/local/bin/geckodriver
   #   - cd java_sb
   script:
-    - mvn test -Dtest=CucumberTest
+    - mvn test -Dtest=CucumberTest $GET_OFFLINE
   artifacts:
     access: developer
     expire_in: "1 hour"
@@ -147,4 +148,6 @@ staging:
   rules:
     - if: *tag_required
     - if: *main_required
-  cache: *cache
+  cache:
+    <<: *cache
+    policy: $SELENIUM_CACHE_POLICY
