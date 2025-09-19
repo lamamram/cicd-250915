@@ -25,6 +25,7 @@ stages:
     - cd java_sb
   script:
     - mvn verify sonar:sonar || exit 0
+    # - mvn package -Dmaven.test.skip=true
   cache:
     key: deps
     policy: push
@@ -84,18 +85,23 @@ stages:
 
 ######## deploy #############################
 
-# staging: environnement de démonstration
 staging:
   stage: staging
   tags:
     - formation
+  before_script:
+    - cd java_sb
   script:
+    # création de l'app .war
+    - mvn package -Dmaven.test.skip=true
     - echo "Deploy !"
-  # déploiement éligible uniquement à un tag git nommé v*.* créé uniquement par un maintainer
-  # le commit lié au tag vient de la branche main
+  # config pour gérer le déploiement dans Operate > Environments
+  environment:
+    name: staging
+    url: https://dawan.fr
   rules:
-    # la clause peut évaluer des variables et des valeurs de types string 
-    # avec les opérateurs ==, !=, =~, !~ (~: regex)
     - if: $CI_COMMIT_TAG =~ /v\d+\.\d+$/
+    # pour la démo
+    - if: $CI_COMMIT_BRANCH == "main"
     
   
