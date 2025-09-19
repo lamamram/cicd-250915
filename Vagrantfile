@@ -28,7 +28,7 @@ Vagrant.configure(2) do |config|
   # ip disponible pour la VM dans l'interface ci-dessus: ping | nslookup
   # CIDR: masque de sous réseau 24 <==> 255.255.255
   interface = "Intel(R) Wireless-AC 9260 160MHz"
-  ip        = "10.154.255.177"
+  ip        = "192.168.1.140"
   cidr      = "24"
 
   ## MAIN
