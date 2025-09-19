@@ -20,7 +20,8 @@ variables:
   GET_OFFLINE: "-o"
   TRIGGER_CACHE: "off"
 
-image: gitlab.lan.fr:5050/formation/dev/java-cicd:${MAVEN_VERSION}
+# image: gitlab.lan.fr:5050/formation/dev/java-cicd:${MAVEN_VERSION}
+image: $CI_REGISTRY_IMAGE/java-cicd:${MAVEN_VERSION}
 
 before_script:
   - cd java_sb
@@ -94,7 +95,7 @@ build:
 
 ######## deploy #############################
 
-.staging:
+staging:
   stage: staging
   tags:
     - formation
@@ -112,10 +113,15 @@ build:
   rules:
     - if: *tag_required
     - if: *main_required
-  cache: *cache
+  # exécuter les dépendences du job et mettre à jour cache
+  cache: 
+    # ANCHOR YAML: alias + modification / ajout de clé
+    <<: *cache
+    policy: pull-push
 
 
-e2e:
+
+.e2e:
   stage: browsing
   tags:
     - formation
