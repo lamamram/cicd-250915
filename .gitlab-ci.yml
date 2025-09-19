@@ -23,11 +23,8 @@ build:
   before_script:
     - cd java_sb
   script:
-    # télécharger les dépendences du projet
     - mvn test
-    # forcer toutes les dépendences (hors projet test ...)
     - mvn dependency:go-offline
-    # idem pour les plugins
     - mvn dependency:resolve-plugins
   cache:
     key: deps
@@ -39,8 +36,7 @@ build:
         - java_sb/pom.xml
     - if: $TRIGGER_CACHE == "on"
 
-# préfixer un job avec "." => désactive le job
-.test:
+test:
   stage: testing
   tags:
     - formation
@@ -73,14 +69,19 @@ sonar:
   before_script:
     - cd java_sb
   script:
-    # ">": convertit les sauts de lignes en espace
-    # SONAR_TOKEN vient de settings > CICD > variables > add variables ...
+    # paramètres liés à la quality gate du serveur sonarqube
+    ## rapport de couverture: injecté dans le job courant depuis le job précédent
+    # via "artifacts:paths:"
+    ## demander l'évaluation de la gate dans le job gitlab 
     - >
       mvn sonar:sonar
       -Dsonar.projectKey=java_sb
       -Dsonar.java.binaries=target
       -Dsonar.host.url=http://gitlab.lan.fr:9000
       -Dsonar.login=$SONAR_TOKEN
+      -Dsonar.coverage.jacoco.xmlReportPaths=java_sb/target/site/jacoco/jacoco.xml
+      -Dsonar.qualitygate.wait=true
+
   cache:
     key: deps
     policy: pull
