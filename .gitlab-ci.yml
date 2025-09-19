@@ -11,6 +11,7 @@
 
 variables:
   MAVEN_VERSION: 3.9.11-eclipse-temurin-21
+  GECKODRIVER_VERSION: v0.36.0-linux64
   MAVEN_OPTS: -Dmaven.repo.local=$CI_PROJECT_DIR/.m2/repository
   MAVEN_ARGS: >
               -s settings.xml
@@ -58,7 +59,8 @@ build:
   tags:
     - formation
   script:
-    - mvn test $GET_OFFLINE
+    # on enlève la classe CucumberTest qui exécutent les tests d'interfaces
+    - mvn test $GET_OFFLINE -Dtest=!CucumberTest
     - cat target/site/jacoco/index.html
   coverage: /Total</td><td class="bar">[0-9]{1,3} of [0-9]{1,3}</td><td class="ctr2">([0-9]{1,3})/
   artifacts:
@@ -117,11 +119,28 @@ e2e:
   stage: browsing
   tags:
     - formation
+  # création de conteneur auxiliaires "sidecar" à la volée qui permet
+  # de se connecter à un serveur par exemple
+  services:
+    - name: selenium/standalone-firefox
+      # nom de domaine à utiiser dans la connexion dans le script JAVA
+      alias: selenium-server
+  # REM: on devrait embarquer l'installation du driver 
+  # dans une image docker personnalisée => docker build avec un fichier Dockerfile
+  before_script:
+    # extraction du driver depuis l'archive
+    # dans un emplacement dans le PATH
+    - >
+      tar 
+      -xzf geckodriver-${GECKODRIVER_VERSION}.tar.gz
+      -C /usr/local/bin
+    # rendre le binaire geckodriver exécutable 
+    - chmod u+x /usr/local/bin/geckodriver
+    - cd java_sb
   script:
-    - mvn test
+    # exécution des tests d'intefaces
+    - mvn test -Dtest=CucumberTest
   rules:
     - if: *tag_required
     - if: *main_required
   cache: *cache
-    
-  
