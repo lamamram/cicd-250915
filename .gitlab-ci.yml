@@ -17,7 +17,7 @@ stages:
   - staging
 
 
-build:
+.build:
   stage: building
   tags:
     - formation
@@ -96,6 +96,6 @@ staging:
   rules:
     # la clause peut évaluer des variables et des valeurs de types string 
     # avec les opérateurs ==, !=, =~, !~ (~: regex)
-    - if: $CI_COMMIT_TAG =~ /v\d+\.\d+/
+    - if: $CI_COMMIT_TAG =~ /v\d+\.\d+$/
     
   
